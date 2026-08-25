@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<kcd_mod>
+	<info>
+		<name>Sir Henry of Skalitz</name>
+		<modid>sir_henry_of_skalitz</modid>
+		<description>Henry was legitimized and knighted at the end of KCD1. Text and voice overhaul treating him as a low-ranking Bohemian knight, grounded in early 15th-century history. Localized text and cloned voice-over across all game languages.</description>
+		<author>Nadja</author>
+		<version>0.2.0</version>
+		<created_on>2026-07-05</created_on>
+		<modifies_level>false</modifies_level>
+	</info>
+</kcd_mod>

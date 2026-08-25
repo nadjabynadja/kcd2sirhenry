@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<kcd_mod>
+	<info>
+		<name>Sir Henry of Skalitz - Knightly Bearing (optional)</name>
+		<modid>sir_henry_quests</modid>
+		<description>Optional mechanical companion to Sir Henry of Skalitz. Dresses Henry as a knight at Trosky, pays quest service a little better, and makes the game evaluate him by a knight's standard - deeds and disgraces weigh more, appearance upkeep matters more, plus a knightly-bearing perk. Tables-only; safe to remove. See the included README.md.</description>
+		<author>Nadja</author>
+		<version>0.2.0</version>
+		<created_on>2026-07-05</created_on>
+		<modifies_level>false</modifies_level>
+	</info>
+</kcd_mod>
