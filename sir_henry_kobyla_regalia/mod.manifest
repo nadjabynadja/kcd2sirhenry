@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<kcd_mod>
+	<info>
+		<name>Sir Henry of Skalitz - Kobyla Regalia (optional)</name>
+		<modid>sir_henry_kobyla_regalia</modid>
+		<description>Optional Kobyla Arms integration for Sir Henry. Re-equips Henry and his arrival horse, adds Henry's horse regalia to the shared player stash, and grants the Noble Bastard outfit after For Whom the Bell Tolls. Requires House of Kobyla Arms Armour and Regalia.</description>
+		<author>Nadja</author>
+		<version>0.2.0</version>
+		<created_on>2026-08-25</created_on>
+		<modifies_level>false</modifies_level>
+	</info>
+</kcd_mod>

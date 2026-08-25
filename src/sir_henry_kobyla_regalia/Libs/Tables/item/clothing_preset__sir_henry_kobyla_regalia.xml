@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<database xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="barbora" xsi:noNamespaceSchemaLocation="../database.xsd">
+	<clothing_presets version="2">
+		<!-- Henry's opening ride: Kobyla Noble Bastard plate over red brocade. -->
+		<clothing_preset clothing_preset_id="1be44a1c-2328-4553-be06-742ae05b3102" clothing_preset_name="UC_HenryStart" gender="Male" prefers_hood_on="false">
+			<Items>
+				<Guid>119a02f2-80f0-4855-8626-b8d059a29dad</Guid> <!-- Hood Base Henry -->
+				<Guid>00b759ec-e88a-4fd0-a327-a220ada837cd</Guid> <!-- Noble Bastard bascinet -->
+				<Guid>2a5e61e1-4a4e-4a1c-b3c2-3cacfeecd5a5</Guid> <!-- Noble Bastard cuirass -->
+				<Guid>c676a062-6059-4658-b94e-35af548462b5</Guid> <!-- Noble Bastard arms -->
+				<Guid>8780e6a9-3cb1-46fb-b1ad-63ad9d4bfa57</Guid> <!-- Noble Bastard legs -->
+				<Guid>c0535f4e-a1ee-40bd-8ae7-6bd9b9b6fb46</Guid> <!-- Red-brocade Kobyla Noble Gambeson -->
+				<Guid>569438e6-7cae-483b-a4db-d1d25aa783d0</Guid> <!-- Noble Boots -->
+			</Items>
+		</clothing_preset>
+		<!-- Keep the retail saddle and bridle, then add Henry's Kobyla regalia. -->
+		<clothing_preset clothing_preset_id="042e095e-85bf-4c37-8f91-76fcddc71e2a" clothing_preset_name="horse_henry_arrival" gender="NotDefined" prefers_hood_on="false">
+			<Items>
+				<Guid>e6352ea6-c400-4284-ae13-dc2c04e6ea4b</Guid>
+				<Guid>0094cf41-f12f-498e-ac87-9c6206263c70</Guid>
+				<Guid>0b1e762d-32a7-478c-b54b-6939d7848623</Guid> <!-- Henry's Caparison -->
+				<Guid>3f59dc15-daf1-4b2d-bccc-ead293572e5f</Guid> <!-- Henry's Chanfron -->
+			</Items>
+		</clothing_preset>
+	</clothing_presets>
+</database>

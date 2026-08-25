@@ -1,6 +1,6 @@
 # Sir Henry of Skalitz
 
-Sir Henry of Skalitz is a two-part mod for *Kingdom Come: Deliverance II*.
+Sir Henry of Skalitz is a modular mod for *Kingdom Come: Deliverance II*.
 It treats Henry as the newly legitimized, low-ranking knight established by the
 end of the first game, and carries that premise through dialogue, subtitles,
 voice-over, clothing, reputation, and a small optional perk.
@@ -23,19 +23,43 @@ more, raises the social cost of dirty or damaged equipment, and adds a small
 Speech-tree perk. See [the module notes](sir_henry_quests/README.md) for the
 exact changes and compatibility implications.
 
+### `sir_henry_kobyla_regalia`
+
+An optional compatibility module for [House of Kobyla Arms Armour and
+Regalia](https://www.nexusmods.com/kingdomcomedeliverance2/mods/1027). It gives
+Henry and his arrival horse Kobyla equipment, adds Henry's horse regalia to the
+shared stash, and grants the Noble Bastard outfit after *For Whom the Bell
+Tolls*. See [the module notes](sir_henry_kobyla_regalia/README.md) for the exact
+load order and item list.
+
+### `sir_henry_trosky_quarters`
+
+An optional level-data module that exchanges Henry's courtyard woodshed bed and
+stash position with an anonymous guard's high bed and bedside chest inside the
+lower-castle guard barracks. The guard keeps his duties and receives Henry's old
+accommodations; no Bergow, Capon, chamberlain, or named knight bed is used. See
+[the module notes](sir_henry_trosky_quarters/README.md) for the exact entity
+exchange, install timing, and in-game test status.
+
 ## Installation
 
-Copy either or both module directories into the game's `Mods` directory:
+Copy the main module and whichever optional module directories you want into
+the game's `Mods` directory:
 
 ```text
 KingdomComeDeliverance2/
 └── Mods/
     ├── sir_henry_of_skalitz/
-    └── sir_henry_quests/       # optional
+    ├── sir_henry_quests/                 # optional
+    ├── sir_henry_kobyla_regalia/         # optional; requires KobylaArms
+    └── sir_henry_trosky_quarters/        # optional; Trosky level edit
 ```
 
-The main module works by itself. The optional module is designed to accompany
-it but contains no scripts or level changes and can be removed independently.
+The main module works by itself. The optional modules are independent. The
+Kobyla Regalia module requires Kobyla Arms, but Kobyla Arms remains only a soft
+requirement of Sir Henry as a whole. Install Trosky Guest Quarters before the
+quest grants Henry his room; ownership can otherwise already be cached in the
+save.
 
 ## Compatibility
 
@@ -44,8 +68,9 @@ hotfix used to export the original tables has not yet been independently
 recorded; treat 1.5.6 as the current verification target, not as a proven source
 baseline. See [COMPATIBILITY.md](docs/COMPATIBILITY.md).
 
-The main compatibility concern is full-file replacement. Localization tables
-and three gameplay tables contain complete snapshots of their upstream files.
+The main compatibility concern is full-file replacement. Localization tables,
+three gameplay tables, and four exported Trosky level files contain complete
+snapshots of their upstream files.
 Another mod or game patch touching the same files may win or lose according to
 load order. Do not assume that two such mods merge automatically.
 

@@ -16,8 +16,12 @@ from xml.etree import ElementTree as ET
 ROOT = Path(__file__).resolve().parents[1]
 MAIN = ROOT / "sir_henry_of_skalitz"
 OPTIONAL = ROOT / "sir_henry_quests"
+REGALIA = ROOT / "sir_henry_kobyla_regalia"
+QUARTERS = ROOT / "sir_henry_trosky_quarters"
 LOCALIZATION = MAIN / "Localization"
 TABLES_PAK = OPTIONAL / "Data" / "Tables.pak"
+REGALIA_PAK = REGALIA / "Data" / "sir_henry_kobyla_regalia.pak"
+QUARTERS_PAK = QUARTERS / "Data" / "Levels" / "trosecko" / "level.pak"
 RECOVERED_CHECKSUMS = ROOT / "upstream" / "recovered-release.sha256"
 
 LANGUAGES = (
@@ -51,6 +55,16 @@ TABLE_FILES = (
     "Libs/Tables/rpg/perk_buff.xml",
     "Libs/Tables/rpg/reputation_change.xml",
     "Libs/Tables/rpg/rpg_param.xml",
+)
+REGALIA_FILES = (
+    "Libs/Tables/item/clothing_preset__sir_henry_kobyla_regalia.xml",
+    "quests/sir_henry_kobyla_regalia.xml",
+)
+QUARTERS_FILES = (
+    "layers/other_a067eb13-56b1-4ceb-ac63-86e03d8e7706.xml",
+    "layers/playerstash_7f1869a5-bf84-4a5b-bc82-e40d93f860b9.xml",
+    "objects_mission0.xml",
+    "tables/ai/scheduler.xml",
 )
 EXPECTED_CLIPS = 300
 CUSTOM_PERK_ID = "a5117e17-0d1a-4b19-9f00-5127486b0001"
@@ -124,8 +138,13 @@ def parse_xml(data: bytes, label: str, audit: Audit) -> ET.Element | None:
 
 def validate_manifests(audit: Audit) -> None:
     versions: set[str] = set()
-    expected = ((MAIN, "sir_henry_of_skalitz"), (OPTIONAL, "sir_henry_quests"))
-    for directory, expected_modid in expected:
+    expected = (
+        (MAIN, "sir_henry_of_skalitz", "false"),
+        (OPTIONAL, "sir_henry_quests", "false"),
+        (REGALIA, "sir_henry_kobyla_regalia", "false"),
+        (QUARTERS, "sir_henry_trosky_quarters", "true"),
+    )
+    for directory, expected_modid, expected_modifies_level in expected:
         path = directory / "mod.manifest"
         audit.require(path.is_file(), f"missing manifest: {path.relative_to(ROOT)}")
         if not path.is_file():
@@ -146,11 +165,16 @@ def validate_manifests(audit: Audit) -> None:
         modid = values.get("modid", "")
         audit.require(modid == expected_modid, f"modid mismatch in {path.relative_to(ROOT)}")
         audit.require(bool(MODID_RE.fullmatch(modid)), f"invalid modid in {path.relative_to(ROOT)}")
-        audit.require(values.get("modifies_level") == "false", f"unexpected modifies_level in {path.relative_to(ROOT)}")
+        audit.require(
+            values.get("modifies_level") == expected_modifies_level,
+            f"unexpected modifies_level in {path.relative_to(ROOT)}",
+        )
         if values.get("version"):
             versions.add(values["version"])
     audit.require(len(versions) == 1, f"module versions do not match: {sorted(versions)}")
     audit.require((OPTIONAL / "README.md").is_file(), "optional module README is missing")
+    audit.require((REGALIA / "README.md").is_file(), "regalia module README is missing")
+    audit.require((QUARTERS / "README.md").is_file(), "Trosky quarters module README is missing")
 
 
 def validate_recovered_checksums(audit: Audit) -> None:
@@ -317,6 +341,170 @@ def validate_tables(audit: Audit) -> None:
         audit.require((CUSTOM_PERK_ID, CUSTOM_BUFF_ID) in links, "custom perk-to-buff link is missing")
 
 
+def validate_regalia(audit: Audit) -> None:
+    pak = open_pak(REGALIA_PAK, audit)
+    if pak is None:
+        return
+    with pak:
+        names = tuple(sorted(pak.namelist()))
+        audit.require(names == REGALIA_FILES, f"unexpected regalia members: {names}")
+        roots: dict[str, ET.Element] = {}
+        for name in REGALIA_FILES:
+            if name in pak.namelist():
+                root = parse_xml(pak.read(name), f"regalia/{name}", audit)
+                if root is not None:
+                    roots[name] = root
+
+        table = roots.get(REGALIA_FILES[0])
+        if table is not None:
+            audit.require(table.tag == "database", "unexpected regalia table root")
+            presets = {row.get("clothing_preset_name"): row for row in table.findall("./clothing_presets/clothing_preset")}
+            audit.require(set(presets) == {"UC_HenryStart", "horse_henry_arrival"}, "regalia preset set differs")
+            expected_items = {
+                "UC_HenryStart": {
+                    "119a02f2-80f0-4855-8626-b8d059a29dad",
+                    "00b759ec-e88a-4fd0-a327-a220ada837cd",
+                    "2a5e61e1-4a4e-4a1c-b3c2-3cacfeecd5a5",
+                    "c676a062-6059-4658-b94e-35af548462b5",
+                    "8780e6a9-3cb1-46fb-b1ad-63ad9d4bfa57",
+                    "c0535f4e-a1ee-40bd-8ae7-6bd9b9b6fb46",
+                    "569438e6-7cae-483b-a4db-d1d25aa783d0",
+                },
+                "horse_henry_arrival": {
+                    "e6352ea6-c400-4284-ae13-dc2c04e6ea4b",
+                    "0094cf41-f12f-498e-ac87-9c6206263c70",
+                    "0b1e762d-32a7-478c-b54b-6939d7848623",
+                    "3f59dc15-daf1-4b2d-bccc-ead293572e5f",
+                },
+            }
+            for name, expected in expected_items.items():
+                actual = {guid.text for guid in presets.get(name, ET.Element("missing")).findall("./Items/Guid")}
+                audit.require(actual == expected, f"{name} item set differs: {sorted(actual)}")
+
+        quest = roots.get(REGALIA_FILES[1])
+        if quest is not None:
+            audit.require(quest.tag == "Database", "unexpected regalia quest root")
+            stash_nodes = quest.findall(".//AddStashDefaultItem")
+            audit.require(len(stash_nodes) == 10, f"expected 10 stash grant nodes, found {len(stash_nodes)}")
+            audit.require(
+                all(node.find("./Asset[@Name='Stashes'][@Alias='player_stash']") is not None for node in stash_nodes),
+                "a regalia reward does not target the shared player stash",
+            )
+            paths = {constant.get("Value") for constant in quest.findall(".//MakeArray/Constant")}
+            audit.require("naTroskach.endQuest" in paths, "Bell Tolls completion prerequisite is missing")
+
+
+def find_entity(root: ET.Element, entity_id: str) -> ET.Element | None:
+    return root.find(f".//Entity[@EntityId='{entity_id}']")
+
+
+def validate_trosky_quarters(audit: Audit) -> None:
+    pak = open_pak(QUARTERS_PAK, audit)
+    if pak is None:
+        return
+    with pak:
+        names = tuple(sorted(pak.namelist()))
+        audit.require(names == QUARTERS_FILES, f"unexpected Trosky quarters members: {names}")
+        roots: dict[str, ET.Element] = {}
+        for name in QUARTERS_FILES:
+            if name in pak.namelist():
+                root = parse_xml(pak.read(name), f"Trosky quarters/{name}", audit)
+                if root is not None:
+                    roots[name] = root
+
+        objects = roots.get("objects_mission0.xml")
+        if objects is not None:
+            audit.require(objects.tag == "Objects", "unexpected Trosky object-list root")
+            alias_targets: dict[str, str] = {}
+            for link in objects.findall(".//Link"):
+                name = link.get("Name", "")
+                if name.startswith("asset['") and name.endswith("']"):
+                    alias_targets[name[7:-2]] = link.get("TargetId", "")
+            expected_aliases = {
+                "bed_playerRoomTrosky": "39429",
+                "playersBed": "39429",
+                "bed_playerRoom": "39429",
+                "playersBed_interactor": "39430",
+            }
+            for alias, target in expected_aliases.items():
+                audit.require(alias_targets.get(alias) == target, f"Trosky alias {alias} does not target {target}")
+
+            old_bed = find_entity(objects, "42143")
+            new_bed = find_entity(objects, "39429")
+            old_trigger = find_entity(objects, "42144")
+            new_trigger = find_entity(objects, "39430")
+            guard_chest = find_entity(objects, "39579")
+            guard_holder = find_entity(objects, "39580")
+            tour = find_entity(objects, "38591")
+            for entity, label in (
+                (old_bed, "old bed"),
+                (new_bed, "new bed"),
+                (old_trigger, "old trigger"),
+                (new_trigger, "new trigger"),
+                (guard_chest, "guard chest"),
+                (guard_holder, "guard chest holder"),
+                (tour, "tour tagpoint"),
+            ):
+                audit.require(entity is not None, f"missing {label} in Trosky object list")
+
+            if old_bed is not None and new_bed is not None:
+                old_quality = old_bed.find("./Properties/Bed")
+                new_quality = new_bed.find("./Properties/Bed")
+                audit.require(old_quality is not None and old_quality.get("esSleepQuality") == "medium", "released bed is not medium quality")
+                audit.require(new_quality is not None and new_quality.get("esSleepQuality") == "high", "new Henry bed is not high quality")
+                old_equipment = [link for link in old_bed.findall("./EntityLinks/Link") if link.get("Name", "").startswith("#ChangeEquipment[")]
+                new_equipment = [link for link in new_bed.findall("./EntityLinks/Link") if link.get("Name", "").startswith("#ChangeEquipment[")]
+                audit.require(len(old_equipment) == 4 and {link.get("TargetId") for link in old_equipment} == {"39579"}, "guard equipment links did not move to the released bed")
+                audit.require(not new_equipment, "Henry's new bed still has NPC equipment links")
+                all_selected_chest_links = [link for link in objects.findall(".//Link") if link.get("Name", "").startswith("#ChangeEquipment[") and link.get("TargetId") == "39579"]
+                audit.require(len(all_selected_chest_links) == 4, "another communal bed still targets the exchanged chest")
+                redirected = [link for link in objects.findall(".//Link") if link.get("Name", "").startswith("#ChangeEquipment[") and link.get("TargetId") == "39498"]
+                audit.require(len(redirected) >= 40, "communal guard bunks were not redirected to the guard armory")
+            if old_trigger is not None and new_trigger is not None:
+                old_properties = old_trigger.find("Properties")
+                new_properties = new_trigger.find("Properties")
+                audit.require(old_properties is not None and old_properties.get("bQuestSystemTrigger") is None, "old bed remains the quest trigger")
+                audit.require(new_properties is not None and new_properties.get("bQuestSystemTrigger") == "1", "new bed is not the quest trigger")
+            for entity, label in ((guard_chest, "guard chest"), (guard_holder, "guard chest holder")):
+                if entity is not None:
+                    audit.require(entity.get("Pos") == "2401.348,2587.609,210.0882", f"{label} is not at Henry's old stash position")
+            if tour is not None:
+                audit.require(tour.get("Pos") == "2514.44,2597.225,183.5139", "room-tour marker did not move")
+
+        stash_layer = roots.get("layers/playerstash_7f1869a5-bf84-4a5b-bc82-e40d93f860b9.xml")
+        if stash_layer is not None:
+            stash_entities = stash_layer.findall("Entity")
+            audit.require(len(stash_entities) == 2, "player-stash layer does not contain exactly two entities")
+            audit.require(
+                all(entity.get("Pos") == "2515.261,2597.491,183.538" for entity in stash_entities),
+                "player stash is not at the new bedside position",
+            )
+            master_links = stash_layer.findall(".//Link[@Name='masterStash'][@TargetId='22106']")
+            audit.require(len(master_links) == 1, "new bedside chest is not linked to the persistent master stash")
+
+        guard_layer = roots.get("layers/other_a067eb13-56b1-4ceb-ac63-86e03d8e7706.xml")
+        if guard_layer is not None:
+            guard = find_entity(guard_layer, "194586")
+            audit.require(guard is not None, "selected anonymous guard is missing")
+            if guard is not None:
+                home_links = guard.findall("./EntityLinks/Link[@Name='_!home']")
+                audit.require(len(home_links) == 1 and home_links[0].get("TargetId") == "32968", "selected guard's exported home link did not move")
+                audit.require(any("@guard_day" in link.get("Name", "") for link in guard.findall("./EntityLinks/Link")), "selected guard lost his day duty")
+                audit.require(any("@guard_night" in link.get("Name", "") for link in guard.findall("./EntityLinks/Link")), "selected guard lost his night duty")
+
+        scheduler = roots.get("tables/ai/scheduler.xml")
+        if scheduler is not None:
+            selected = scheduler.find(".//C_SmartHub[@EntityGuid='4698821958127104449']")
+            audit.require(selected is not None, "selected guard is missing from scheduler")
+            if selected is not None:
+                homes = [
+                    link.get("TargetGuid")
+                    for link in selected.findall("./Links/S_ActivityLink")
+                    if (link.find("Parameters") is not None and link.find("Parameters").get("AILinkHome") == "true")
+                ]
+                audit.require(homes == ["5672840764409888384"], "selected guard's compiled scheduler home did not move")
+
+
 def main() -> int:
     audit = Audit()
     print("Validating manifests...")
@@ -329,6 +517,10 @@ def main() -> int:
     validate_voice(audit)
     print("Validating gameplay tables...")
     validate_tables(audit)
+    print("Validating Kobyla Regalia compatibility module...")
+    validate_regalia(audit)
+    print("Validating Trosky Guest Quarters level module...")
+    validate_trosky_quarters(audit)
 
     for warning in audit.warnings:
         print(f"WARNING: {warning}", file=sys.stderr)

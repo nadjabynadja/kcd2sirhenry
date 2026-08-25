@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Database xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" Name="brambora">
+	<Skald>
+		<Gameplay Name="sir_henry_kobyla_regalia">
+			<Nodes>
+				<!-- These three become shared-stash defaults as soon as this add-on loads. -->
+				<AddStashDefaultItem Name="stash_henry_base_hood" PositionY="-720" PositionX="200">
+					<Constant Name="ItemClass" Value="119a02f2-80f0-4855-8626-b8d059a29dad" />
+					<Constant Name="DisableRestock" Value="true" />
+					<Asset Name="Stashes" Alias="player_stash" />
+					<Constant Name="Quality" Value="3" />
+					<Constant Name="IsActive" Value="true" />
+				</AddStashDefaultItem>
+				<AddStashDefaultItem Name="stash_henry_caparison" PositionY="-520" PositionX="200">
+					<Constant Name="ItemClass" Value="0b1e762d-32a7-478c-b54b-6939d7848623" />
+					<Constant Name="DisableRestock" Value="true" />
+					<Asset Name="Stashes" Alias="player_stash" />
+					<Constant Name="Quality" Value="3" />
+					<Constant Name="IsActive" Value="true" />
+				</AddStashDefaultItem>
+				<AddStashDefaultItem Name="stash_henry_chanfron" PositionY="-320" PositionX="200">
+					<Constant Name="ItemClass" Value="3f59dc15-daf1-4b2d-bccc-ead293572e5f" />
+					<Constant Name="DisableRestock" Value="true" />
+					<Asset Name="Stashes" Alias="player_stash" />
+					<Constant Name="Quality" Value="3" />
+					<Constant Name="IsActive" Value="true" />
+				</AddStashDefaultItem>
+
+				<!-- Haste observes the retail quest without replacing its graph. -->
+				<MakeArray Name="bell_tolls_done_path" PositionY="0" PositionX="-360" TypeT="wh::conceptmodule::ConceptPaths">
+					<Constant Name="A" Value="naTroskach.endQuest" />
+				</MakeArray>
+				<HasteTrigger Name="grant_noble_bastard_outfit" PositionY="0" PositionX="0">
+					<Constant Name="IsHidden" Value="true" />
+					<Edge From="bell_tolls_done_path.Array" To="Prerequisites" />
+				</HasteTrigger>
+
+				<AddStashDefaultItem Name="reward_henry_base_hood" PositionY="180" PositionX="420">
+					<Constant Name="ItemClass" Value="119a02f2-80f0-4855-8626-b8d059a29dad" />
+					<Constant Name="DisableRestock" Value="true" />
+					<Asset Name="Stashes" Alias="player_stash" />
+					<Constant Name="Quality" Value="3" />
+					<Edge From="grant_noble_bastard_outfit.OnTrigger" To="IsActive" />
+				</AddStashDefaultItem>
+				<AddStashDefaultItem Name="reward_noble_bastard_bascinet" PositionY="380" PositionX="420">
+					<Constant Name="ItemClass" Value="00b759ec-e88a-4fd0-a327-a220ada837cd" />
+					<Constant Name="DisableRestock" Value="true" />
+					<Asset Name="Stashes" Alias="player_stash" />
+					<Constant Name="Quality" Value="3" />
+					<Edge From="grant_noble_bastard_outfit.OnTrigger" To="IsActive" />
+				</AddStashDefaultItem>
+				<AddStashDefaultItem Name="reward_noble_bastard_cuirass" PositionY="580" PositionX="420">
+					<Constant Name="ItemClass" Value="2a5e61e1-4a4e-4a1c-b3c2-3cacfeecd5a5" />
+					<Constant Name="DisableRestock" Value="true" />
+					<Asset Name="Stashes" Alias="player_stash" />
+					<Constant Name="Quality" Value="3" />
+					<Edge From="grant_noble_bastard_outfit.OnTrigger" To="IsActive" />
+				</AddStashDefaultItem>
+				<AddStashDefaultItem Name="reward_noble_bastard_arms" PositionY="780" PositionX="420">
+					<Constant Name="ItemClass" Value="c676a062-6059-4658-b94e-35af548462b5" />
+					<Constant Name="DisableRestock" Value="true" />
+					<Asset Name="Stashes" Alias="player_stash" />
+					<Constant Name="Quality" Value="3" />
+					<Edge From="grant_noble_bastard_outfit.OnTrigger" To="IsActive" />
+				</AddStashDefaultItem>
+				<AddStashDefaultItem Name="reward_noble_bastard_legs" PositionY="980" PositionX="420">
+					<Constant Name="ItemClass" Value="8780e6a9-3cb1-46fb-b1ad-63ad9d4bfa57" />
+					<Constant Name="DisableRestock" Value="true" />
+					<Asset Name="Stashes" Alias="player_stash" />
+					<Constant Name="Quality" Value="3" />
+					<Edge From="grant_noble_bastard_outfit.OnTrigger" To="IsActive" />
+				</AddStashDefaultItem>
+				<AddStashDefaultItem Name="reward_red_brocade_gambeson" PositionY="1180" PositionX="420">
+					<Constant Name="ItemClass" Value="c0535f4e-a1ee-40bd-8ae7-6bd9b9b6fb46" />
+					<Constant Name="DisableRestock" Value="true" />
+					<Asset Name="Stashes" Alias="player_stash" />
+					<Constant Name="Quality" Value="3" />
+					<Edge From="grant_noble_bastard_outfit.OnTrigger" To="IsActive" />
+				</AddStashDefaultItem>
+				<AddStashDefaultItem Name="reward_noble_boots" PositionY="1380" PositionX="420">
+					<Constant Name="ItemClass" Value="569438e6-7cae-483b-a4db-d1d25aa783d0" />
+					<Constant Name="DisableRestock" Value="true" />
+					<Asset Name="Stashes" Alias="player_stash" />
+					<Constant Name="Quality" Value="3" />
+					<Edge From="grant_noble_bastard_outfit.OnTrigger" To="IsActive" />
+				</AddStashDefaultItem>
+			</Nodes>
+			<Text StringName="sir_henry_kobyla_regalia_name" Text="Sir Henry - Kobyla Regalia" />
+		</Gameplay>
+	</Skald>
+</Database>

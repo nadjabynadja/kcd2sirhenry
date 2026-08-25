@@ -24,6 +24,13 @@ The optional module replaces complete `reputation_change.xml`, `rpg_param.xml`,
 and `perk_buff.xml` files. It also supplies additive perk/buff files and one
 clothing-preset record.
 
+Trosky Guest Quarters replaces four files inside the Trosecko `level.pak`:
+`objects_mission0.xml`, `tables/ai/scheduler.xml`, the selected guard's
+streaming layer, and the Trosky player-stash layer. It cannot be combined by
+load order alone with another mod replacing any of those files. The authored
+delta is rebuilt from the verified 1.5.5 level export and intentionally marks
+`modifies_level` true.
+
 Any mod or patch touching the same complete file is potentially incompatible.
 Load order chooses a winner; it does not merge individual XML rows.
 
