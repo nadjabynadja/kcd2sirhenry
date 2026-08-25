@@ -21,7 +21,8 @@ QUARTERS = ROOT / "sir_henry_trosky_quarters"
 LOCALIZATION = MAIN / "Localization"
 TABLES_PAK = OPTIONAL / "Data" / "Tables.pak"
 REGALIA_PAK = REGALIA / "Data" / "sir_henry_kobyla_regalia.pak"
-QUARTERS_PAK = QUARTERS / "Data" / "Levels" / "trosecko" / "level.pak"
+QUARTERS_LEVEL_DIR = QUARTERS / "Data" / "Levels" / "trosecko"
+QUARTERS_PAK = QUARTERS_LEVEL_DIR / "sir_henry_trosky_quarters.pak"
 RECOVERED_CHECKSUMS = ROOT / "upstream" / "recovered-release.sha256"
 
 LANGUAGES = (
@@ -399,6 +400,14 @@ def find_entity(root: ET.Element, entity_id: str) -> ET.Element | None:
 
 
 def validate_trosky_quarters(audit: Audit) -> None:
+    audit.require(
+        not (QUARTERS_LEVEL_DIR / "level.pak").exists(),
+        "existing-level patches must not use the reserved level.pak filename",
+    )
+    audit.require(
+        {path.name for path in QUARTERS_LEVEL_DIR.glob("*.pak")} == {QUARTERS_PAK.name},
+        "unexpected Trosky level PAK set",
+    )
     pak = open_pak(QUARTERS_PAK, audit)
     if pak is None:
         return

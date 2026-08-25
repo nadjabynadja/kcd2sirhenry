@@ -18,7 +18,14 @@ from xml.etree import ElementTree as ET
 
 
 ROOT = Path(__file__).resolve().parents[1]
-OUTPUT = ROOT / "sir_henry_trosky_quarters" / "Data" / "Levels" / "trosecko" / "level.pak"
+OUTPUT = (
+    ROOT
+    / "sir_henry_trosky_quarters"
+    / "Data"
+    / "Levels"
+    / "trosecko"
+    / "sir_henry_trosky_quarters.pak"
+)
 DEFAULT_LEVEL_PAK = Path("/run/media/nadja/vol1/Game Mods Dev/KCD 2/tables/Levels/trosecko/level.pak")
 EXPECTED_LEVEL_PAK_SHA256 = "39936765768694ec55c457af5d355d62be60812f60f6047d71797094aec3afb9"
 EXPECTED_MEMBER_SHA256 = {

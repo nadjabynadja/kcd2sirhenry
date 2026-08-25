@@ -29,7 +29,10 @@ Trosky Guest Quarters replaces four files inside the Trosecko `level.pak`:
 streaming layer, and the Trosky player-stash layer. It cannot be combined by
 load order alone with another mod replacing any of those files. The authored
 delta is rebuilt from the verified 1.5.5 level export and intentionally marks
-`modifies_level` true.
+`modifies_level` true. The delta is shipped as the supplemental archive
+`Data/Levels/trosecko/sir_henry_trosky_quarters.pak`; the reserved filename
+`level.pak` denotes a primary/new-level archive and would prevent normal level
+loading when used for this partial override.
 
 Any mod or patch touching the same complete file is potentially incompatible.
 Load order chooses a winner; it does not merge individual XML rows.

@@ -49,7 +49,11 @@ python3 scripts/build_trosky_quarters.py \
 
 The builder accepts the verified 1.5.5 exported baseline, applies guarded
 byte-level XML edits, parses every generated XML file, and writes a
-stored/uncompressed deterministic PAK. A different game baseline fails closed.
+stored/uncompressed deterministic PAK named
+`Data/Levels/trosecko/sir_henry_trosky_quarters.pak`. The mod-ID filename is
+intentional: `level.pak` is reserved for a level's primary archive and must not
+be used for a patch to the existing Trosecko level. A different game baseline
+fails closed.
 
 ## Compatibility and verification status
 
