@@ -386,16 +386,21 @@ def validate_regalia(audit: Audit) -> None:
         if table is not None:
             audit.require(table.tag == "database", "unexpected regalia table root")
             presets = {row.get("clothing_preset_name"): row for row in table.findall("./clothing_presets/clothing_preset")}
-            audit.require(set(presets) == {"UC_HenryStart", "horse_henry_arrival"}, "regalia preset set differs")
+            audit.require(
+                set(presets) == {"UC_HenryStart", "UC_HenryStartStage1", "horse_henry_arrival"},
+                "regalia preset set differs",
+            )
+            start_items = {
+                "119a02f2-80f0-4855-8626-b8d059a29dad",
+                "10ff6d35-8c14-4871-8656-bdc3476d8b12",
+                "410ee66c-ee38-4d67-9a93-ac1ec288f89c",
+                "a8cb0916-6466-4728-b551-6f645d40a76d",
+                "afa1ab10-b28e-4d76-873c-8a4780603695",
+                "569438e6-7cae-483b-a4db-d1d25aa783d0",
+            }
             expected_items = {
-                "UC_HenryStart": {
-                    "119a02f2-80f0-4855-8626-b8d059a29dad",
-                    "10ff6d35-8c14-4871-8656-bdc3476d8b12",
-                    "410ee66c-ee38-4d67-9a93-ac1ec288f89c",
-                    "a8cb0916-6466-4728-b551-6f645d40a76d",
-                    "afa1ab10-b28e-4d76-873c-8a4780603695",
-                    "569438e6-7cae-483b-a4db-d1d25aa783d0",
-                },
+                "UC_HenryStart": start_items,
+                "UC_HenryStartStage1": start_items,
                 "horse_henry_arrival": {
                     "e6352ea6-c400-4284-ae13-dc2c04e6ea4b",
                     "0094cf41-f12f-498e-ac87-9c6206263c70",
@@ -406,13 +411,14 @@ def validate_regalia(audit: Audit) -> None:
             for name, expected in expected_items.items():
                 actual = {guid.text for guid in presets.get(name, ET.Element("missing")).findall("./Items/Guid")}
                 audit.require(actual == expected, f"{name} item set differs: {sorted(actual)}")
-            start_items = {
-                guid.text for guid in presets["UC_HenryStart"].findall("./Items/Guid")
-            } if "UC_HenryStart" in presets else set()
-            audit.require(
-                "962a26c0-078e-430b-b806-c19fc52526da" not in start_items,
-                "The breteche bascinet must not be equipped in UC_HenryStart",
-            )
+            for name in ("UC_HenryStart", "UC_HenryStartStage1"):
+                actual = {
+                    guid.text for guid in presets[name].findall("./Items/Guid")
+                } if name in presets else set()
+                audit.require(
+                    "962a26c0-078e-430b-b806-c19fc52526da" not in actual,
+                    f"The breteche bascinet must not be equipped in {name}",
+                )
 
         audit.require(
             not any(name.casefold().startswith("quests/") for name in names),

@@ -12,6 +12,17 @@
 				<Guid>569438e6-7cae-483b-a4db-d1d25aa783d0</Guid> <!-- Noble Boots -->
 			</Items>
 		</clothing_preset>
+		<!-- The opening sequence requests this stage-specific preset before UC_HenryStart. -->
+		<clothing_preset clothing_preset_id="4a57ea71-26d3-4c45-9444-fb423e42bbf1" clothing_preset_name="UC_HenryStartStage1" gender="Male" prefers_hood_on="false">
+			<Items>
+				<Guid>119a02f2-80f0-4855-8626-b8d059a29dad</Guid> <!-- Hood Base Henry -->
+				<Guid>10ff6d35-8c14-4871-8656-bdc3476d8b12</Guid> <!-- Noble cuirass -->
+				<Guid>410ee66c-ee38-4d67-9a93-ac1ec288f89c</Guid> <!-- Noble plate arms -->
+				<Guid>a8cb0916-6466-4728-b551-6f645d40a76d</Guid> <!-- Noble plate legs -->
+				<Guid>afa1ab10-b28e-4d76-873c-8a4780603695</Guid> <!-- Red Long Pourpoint -->
+				<Guid>569438e6-7cae-483b-a4db-d1d25aa783d0</Guid> <!-- Noble Boots -->
+			</Items>
+		</clothing_preset>
 		<!-- Keep the retail saddle and bridle, then add Henry's Kobyla regalia. -->
 		<clothing_preset clothing_preset_id="042e095e-85bf-4c37-8f91-76fcddc71e2a" clothing_preset_name="horse_henry_arrival" gender="NotDefined" prefers_hood_on="false">
 			<Items>

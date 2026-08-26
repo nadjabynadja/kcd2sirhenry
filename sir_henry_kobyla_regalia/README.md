@@ -14,8 +14,9 @@ after `KobylaArms` and the Sir Henry modules.
 
 ## Changes
 
-- Replaces `UC_HenryStart` with the base-game Noble cuirass, plate arms, plate
-  legs, red Long Pourpoint, and Noble Boots while retaining Henry Base hood.
+- Replaces both startup phases (`UC_HenryStart` and `UC_HenryStartStage1`) with
+  the base-game Noble cuirass, plate arms, plate legs, red Long Pourpoint, and
+  Noble Boots while retaining Henry Base hood.
 - Adds the base-game Bascinet with breteche to Henry's inventory instead of
   equipping it in the scene outfit.
 - Adds Henry's Kobyla caparison and chanfron to `horse_henry_arrival` while
