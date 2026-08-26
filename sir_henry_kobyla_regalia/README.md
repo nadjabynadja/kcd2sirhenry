@@ -5,8 +5,8 @@ Kobyla Arms Armour and Regalia**.
 
 ## Requirements
 
-- House of Kobyla Arms Armour and Regalia 1.6.5 or later (hard requirement for
-  this compatibility module's item records)
+- House of Kobyla Arms Armour and Regalia 1.6.5 or later (required for Henry's
+  hood and horse regalia)
 - Sir Henry of Skalitz is recommended, but not technically required
 
 Install `sir_henry_kobyla_regalia` beside the other mod directories and load it
@@ -14,21 +14,22 @@ after `KobylaArms` and the Sir Henry modules.
 
 ## Changes
 
-- Replaces `UC_HenryStart` with the Kobyla Noble Bastard cuirass, arms, legs,
-  and bascinet; Henry Base hood; red-brocade Kobyla Noble Gambeson; and Noble
-  Boots.
+- Replaces `UC_HenryStart` with the base-game Noble cuirass, plate arms, plate
+  legs, red Long Pourpoint, and Noble Boots while retaining Henry Base hood.
+- Adds the base-game Bascinet with breteche to Henry's inventory instead of
+  equipping it in the scene outfit.
 - Adds Henry's Kobyla caparison and chanfron to `horse_henry_arrival` while
   preserving the horse's original saddle and bridle.
-- Adds Henry Base hood, Henry's caparison, and Henry's chanfron to the shared
-  player stash.
-- Adds the seven-piece starting outfit to the shared player stash after
-  `naTroskach.endQuest` (the end of *For Whom the Bell Tolls*).
 
-The stash entries use quality 3, matching the Kobyla Arms merchant presets,
-and `DisableRestock=true` so removed or sold rewards are not recreated.
+The compatibility module is intentionally tables-only. An earlier build also
+shipped a standalone `Gameplay` document containing always-active
+`player_stash` nodes. That graph was not owned by a retail-style quest project
+and could stall a new game while the starting world initialized, so it has
+been removed from the runtime package.
 
 ## Compatibility
 
 The clothing changes use a patched table file. Another mod patching the same
-two preset records can still conflict according to load order. The quest graph
-is additive and does not replace `naTroskach.xml`.
+two preset records can still conflict according to load order. This module no
+longer adds or replaces quest graphs or directly mutates the shared player
+stash.

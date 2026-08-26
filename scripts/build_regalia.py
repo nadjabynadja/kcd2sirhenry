@@ -11,10 +11,10 @@ ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "src" / "sir_henry_kobyla_regalia"
 OUTPUT = ROOT / "sir_henry_kobyla_regalia" / "Data" / "sir_henry_kobyla_regalia.pak"
 MEMBERS = {
+    SOURCE / "Libs/Tables/item/InventoryPreset__sir_henry_kobyla_regalia.xml":
+        "Libs/Tables/item/InventoryPreset__sir_henry_kobyla_regalia.xml",
     SOURCE / "Libs/Tables/item/clothing_preset__sir_henry_kobyla_regalia.xml":
         "Libs/Tables/item/clothing_preset__sir_henry_kobyla_regalia.xml",
-    SOURCE / "quests/sir_henry_kobyla_regalia.xml":
-        "quests/sir_henry_kobyla_regalia.xml",
 }
 
 

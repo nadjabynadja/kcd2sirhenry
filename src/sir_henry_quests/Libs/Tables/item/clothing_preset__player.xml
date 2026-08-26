@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="us-ascii"?>
+<!--
+	Sir Henry of Skalitz - Knightly Bearing.
+
+	Overrides ONE scene preset by its vanilla clothing_preset_id so every
+	PlayerOutfitOverride node that points at that GUID picks up the new kit.
+	Only UC_HenryTrosky is changed: Henry is NOT undercover at Trosky, so he
+	arrives dressed as the knight he is. The other scene presets (Arrival at
+	Suchdol, the jail, the cupbearer cover role) are left vanilla on purpose -
+	they are the "proof of rank destroyed" / cover beats the text canon relies on.
+
+	The bascinet remains deliberately absent from this worn scene preset. The
+	Kobyla Regalia optional module places it in inventory instead. The vanilla
+	red Long Pourpoint replaces the former Noble Gambeson here.
+
+	The longsword is placed in this clothing preset's Items (Henry-only). The
+	scene's paired WeaponPreset is the shared "_empty" preset (10101010-...,
+	referenced by 82 quest files); overriding that would arm unrelated NPCs, so it
+	is deliberately left alone.
+-->
+<database xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="barbora" xsi:noNamespaceSchemaLocation="../database.xsd">
+	<clothing_presets version="2">
+		<clothing_preset clothing_preset_id="52169773-0c2b-407a-a123-8b403e224718" clothing_preset_name="UC_HenryTrosky" gender="Male" prefers_hood_on="false">
+			<Items>
+				<Guid>afa1ab10-b28e-4d76-873c-8a4780603695</Guid> <!-- Red Long Pourpoint (GambesonLong03_m01_B4) -->
+				<Guid>3d64562f-8f1f-418f-a332-c2c735522c91</Guid> <!-- Noble Hood, brown -->
+				<Guid>a79e8354-4706-4dde-bec3-51e1d88bf699</Guid> <!-- Noble Quilted Hose -->
+				<Guid>808101ad-28ff-4425-ad2a-5fbe4f9fbbbe</Guid> <!-- High Boots -->
+				<Guid>d72bfeaa-f17c-44be-968c-ebcba5da7a61</Guid> <!-- Knight's Spurs -->
+				<Guid>bdb6fc2a-43e4-40b8-93c8-f2d9162c1e45</Guid> <!-- Knight's Longsword -->
+			</Items>
+		</clothing_preset>
+	</clothing_presets>
+</database>

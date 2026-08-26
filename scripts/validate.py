@@ -58,8 +58,8 @@ TABLE_FILES = (
     "Libs/Tables/rpg/rpg_param.xml",
 )
 REGALIA_FILES = (
+    "Libs/Tables/item/InventoryPreset__sir_henry_kobyla_regalia.xml",
     "Libs/Tables/item/clothing_preset__sir_henry_kobyla_regalia.xml",
-    "quests/sir_henry_kobyla_regalia.xml",
 )
 QUARTERS_FILES = (
     "layers/other_a067eb13-56b1-4ceb-ac63-86e03d8e7706.xml",
@@ -331,6 +331,23 @@ def validate_tables(audit: Audit) -> None:
             duplicates = duplicate_attribute(rows, attribute)
             audit.require(not duplicates, f"duplicate {attribute} values in {name}: {duplicates}")
 
+        outfit_root = roots.get("Libs/Tables/item/clothing_preset__player.xml")
+        if outfit_root is not None:
+            trosky = outfit_root.find("./clothing_presets/clothing_preset[@clothing_preset_name='UC_HenryTrosky']")
+            actual = {guid.text for guid in trosky.findall("./Items/Guid")} if trosky is not None else set()
+            audit.require(
+                "afa1ab10-b28e-4d76-873c-8a4780603695" in actual,
+                "UC_HenryTrosky must use the red Long Pourpoint",
+            )
+            audit.require(
+                "af03a987-053a-4b91-ace2-da2f1b501dd0" not in actual,
+                "UC_HenryTrosky still contains the former Noble Gambeson",
+            )
+            audit.require(
+                "962a26c0-078e-430b-b806-c19fc52526da" not in actual,
+                "UC_HenryTrosky must not equip the breteche bascinet",
+            )
+
         perk_root = roots.get("Libs/Tables/rpg/perk__sirhenry.xml")
         buff_root = roots.get("Libs/Tables/rpg/buff__sirhenry.xml")
         link_root = roots.get("Libs/Tables/rpg/perk_buff.xml")
@@ -356,7 +373,16 @@ def validate_regalia(audit: Audit) -> None:
                 if root is not None:
                     roots[name] = root
 
-        table = roots.get(REGALIA_FILES[0])
+        inventory = roots.get("Libs/Tables/item/InventoryPreset__sir_henry_kobyla_regalia.xml")
+        if inventory is not None:
+            items = inventory.findall("./InventoryPresets/InventoryPreset[@Name='inventory_player_henry']/PresetItem")
+            audit.require(
+                [(item.get("Name"), item.get("Amount")) for item in items]
+                == [("BascinetOpen03_m01_C4", "1")],
+                "Henry's starting inventory must contain exactly one unequipped breteche bascinet patch item",
+            )
+
+        table = roots.get("Libs/Tables/item/clothing_preset__sir_henry_kobyla_regalia.xml")
         if table is not None:
             audit.require(table.tag == "database", "unexpected regalia table root")
             presets = {row.get("clothing_preset_name"): row for row in table.findall("./clothing_presets/clothing_preset")}
@@ -364,11 +390,10 @@ def validate_regalia(audit: Audit) -> None:
             expected_items = {
                 "UC_HenryStart": {
                     "119a02f2-80f0-4855-8626-b8d059a29dad",
-                    "00b759ec-e88a-4fd0-a327-a220ada837cd",
-                    "2a5e61e1-4a4e-4a1c-b3c2-3cacfeecd5a5",
-                    "c676a062-6059-4658-b94e-35af548462b5",
-                    "8780e6a9-3cb1-46fb-b1ad-63ad9d4bfa57",
-                    "c0535f4e-a1ee-40bd-8ae7-6bd9b9b6fb46",
+                    "10ff6d35-8c14-4871-8656-bdc3476d8b12",
+                    "410ee66c-ee38-4d67-9a93-ac1ec288f89c",
+                    "a8cb0916-6466-4728-b551-6f645d40a76d",
+                    "afa1ab10-b28e-4d76-873c-8a4780603695",
                     "569438e6-7cae-483b-a4db-d1d25aa783d0",
                 },
                 "horse_henry_arrival": {
@@ -381,18 +406,18 @@ def validate_regalia(audit: Audit) -> None:
             for name, expected in expected_items.items():
                 actual = {guid.text for guid in presets.get(name, ET.Element("missing")).findall("./Items/Guid")}
                 audit.require(actual == expected, f"{name} item set differs: {sorted(actual)}")
-
-        quest = roots.get(REGALIA_FILES[1])
-        if quest is not None:
-            audit.require(quest.tag == "Database", "unexpected regalia quest root")
-            stash_nodes = quest.findall(".//AddStashDefaultItem")
-            audit.require(len(stash_nodes) == 10, f"expected 10 stash grant nodes, found {len(stash_nodes)}")
+            start_items = {
+                guid.text for guid in presets["UC_HenryStart"].findall("./Items/Guid")
+            } if "UC_HenryStart" in presets else set()
             audit.require(
-                all(node.find("./Asset[@Name='Stashes'][@Alias='player_stash']") is not None for node in stash_nodes),
-                "a regalia reward does not target the shared player stash",
+                "962a26c0-078e-430b-b806-c19fc52526da" not in start_items,
+                "The breteche bascinet must not be equipped in UC_HenryStart",
             )
-            paths = {constant.get("Value") for constant in quest.findall(".//MakeArray/Constant")}
-            audit.require("naTroskach.endQuest" in paths, "Bell Tolls completion prerequisite is missing")
+
+        audit.require(
+            not any(name.casefold().startswith("quests/") for name in names),
+            "Regalia must remain tables-only; its former standalone Gameplay graph deadlocked world loading",
+        )
 
 
 def find_entity(root: ET.Element, entity_id: str) -> ET.Element | None:

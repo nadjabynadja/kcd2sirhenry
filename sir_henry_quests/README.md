@@ -5,8 +5,9 @@ Skalitz. It contains data tables only: no scripts, quests, or level edits.
 
 ## What it changes
 
-- Replaces Henry's `UC_HenryTrosky` scene outfit with a noble gambeson, hood,
-  quilted hose, high boots, knight's spurs, and a Knight's Longsword.
+- Replaces Henry's `UC_HenryTrosky` scene outfit with a red Long Pourpoint,
+  noble hood, quilted hose, high boots, knight's spurs, and a Knight's
+  Longsword. The scene outfit deliberately has no helmet.
 - Changes `QuestMoneyRewardScaleConstant` from `1.025` to `1.10`.
 - Changes `ArmorDirtToCharismaCoef` from `0.8` to `1.1`.
 - Changes `ArmorStatusToCharismaCoef` from `0.6` to `0.85`.

@@ -27,10 +27,10 @@ exact changes and compatibility implications.
 
 An optional compatibility module for [House of Kobyla Arms Armour and
 Regalia](https://www.nexusmods.com/kingdomcomedeliverance2/mods/1027). It gives
-Henry and his arrival horse Kobyla equipment, adds Henry's horse regalia to the
-shared stash, and grants the Noble Bastard outfit after *For Whom the Bell
-Tolls*. See [the module notes](sir_henry_kobyla_regalia/README.md) for the exact
-load order and item list.
+Henry a vanilla Noble armour outfit while retaining his Kobyla hood and
+equipping his arrival horse with Kobyla regalia. See [the module
+notes](sir_henry_kobyla_regalia/README.md) for the exact load order and item
+list.
 
 ### `sir_henry_trosky_quarters`
 
